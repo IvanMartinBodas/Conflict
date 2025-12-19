@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Conflict Tracker - Frontend</title>
+</head>
+<body>
+<h1>Llista de Conflictes Bèl·lics</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Estat</th>
+    </tr>
+    </thead>
+    <tbody id="taula-conflictes">
+    </tbody>
+</table>
+
+<script>
+    fetch('/api/v1/conflicts')
+        .then(response => response.json())
+        .then(data => {
+            const taula = document.getElementById('taula-conflictes');
+            data.forEach(conflicte => {
+                const fila = `<tr>
+                    <td>${conflicte.id}</td>
+                    <td>${conflicte.name}</td>
+                    <td>${conflicte.status}</td>
+                </tr>`;
+                taula.innerHTML += fila;
+            });
+        })
+        .catch(error => console.error('Error carregant conflictes:', error));
+</script>
+</body>
+</html>
