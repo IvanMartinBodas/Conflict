@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class ConflictService {
     private final ConflictRepository repository;
+
     @Autowired
     private ConflictMapper mapper;
 
@@ -39,5 +40,19 @@ public class ConflictService {
     public ConflictDto save(ConflictDto dto) {
         Conflict c = repository.save(mapper.toEntity(dto));
         return mapper.toDTO(c);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    public ConflictDto update(Long id, ConflictDto dto) {
+        Conflict conflict = repository.findById(id).get();
+
+        conflict.setName(dto.name());
+        conflict.setStatus(ConflictStatus.valueOf(dto.status().toUpperCase()));
+
+        Conflict actualizado = repository.save(conflict);
+        return mapper.toDTO(actualizado);
     }
 }

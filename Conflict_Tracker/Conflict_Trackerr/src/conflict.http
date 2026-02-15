@@ -1,12 +1,23 @@
-### Llistar tots els conflictes
 GET http://localhost:8080/api/v1/conflicts
 
 ###
 
-### Filtrar per estat ACTIVE
 GET http://localhost:8080/api/v1/conflicts?status=ACTIVE
 
 ###
 
-### Conflictes d'un país per codi
 GET http://localhost:8080/api/v1/countries/UKR/conflicts
+
+###
+
+PUT http://localhost:8080/api/v1/conflicts/1
+Content-Type: application/json
+
+{
+  "name": "Conflicte Actualitzat",
+  "status": "INACTIVE"
+}
+
+###
+
+DELETE http://localhost:8080/api/v1/conflicts/1
