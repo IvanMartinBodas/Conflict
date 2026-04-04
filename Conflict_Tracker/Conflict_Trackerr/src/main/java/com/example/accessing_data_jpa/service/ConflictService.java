@@ -51,6 +51,8 @@ public class ConflictService {
 
         conflict.setName(dto.name());
         conflict.setStatus(ConflictStatus.valueOf(dto.status().toUpperCase()));
+        conflict.setStartDate(dto.startDate());
+        conflict.setDescription(dto.description());
 
         Conflict actualizado = repository.save(conflict);
         return mapper.toDTO(actualizado);
