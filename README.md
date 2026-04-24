@@ -120,9 +120,35 @@ public class CorsConfig implements WebMvcConfigurer {
 
 ---
 
+**Error 3 – Dades duplicades en arrencar**
+
+El fitxer `ConflictTrackerApp.java` tenia un `CommandLineRunner` que inseria dades d'exemple cada cop que el servidor arrencava. En producció, la BD ja tenia les dades i donava error de clau duplicada:
+
+```
+ERROR: duplicate key value violates unique constraint
+Detail: Key (code)=(UKR) already exists.
+```
+
+Solució – eliminar el `CommandLineRunner` de `ConflictTrackerApp.java`:
+```java
+// Abans
+@Bean
+public CommandLineRunner demo(ConflictRepository repo, CountryRepository cRepo) {
+    return (args) -> {
+        Country c = new Country("Ucraïna", "UKR");
+        cRepo.save(c);
+        ...
+    };
+}
+
+// Després – mètode eliminat completament
+```
+
+---
+
 ### Frontend
 
-**Error 3 – URL de l'API apuntava a localhost**
+**Error 4 – URL de l'API apuntava a localhost**
 
 Totes les crides axios usaven rutes relatives com `/api/v1/conflicts`, que funcionaven en local gràcies al proxy de Vite. En producció, aquest proxy no existeix i les crides fallaven amb 404.
 
@@ -138,7 +164,7 @@ const BASE = import.meta.env.VITE_API_URL || ''
 
 ---
 
-**Error 4 – Error 404 en refrescar rutes**
+**Error 5 – Error 404 en refrescar rutes**
 
 En accedir directament a `/conflicts/5` o refrescar la pàgina, Vercel retornava 404 perquè buscava un fitxer estàtic que no existia. Vue Router gestiona les rutes al client, però Vercel no ho sap.
 
@@ -153,7 +179,7 @@ Solució – crear `vercel.json` a l'arrel del projecte:
 
 ---
 
-**Error 5 – Errors de l'API contaminaven l'estat de Pinia**
+**Error 6 – Errors de l'API contaminaven l'estat de Pinia**
 
 Quan el backend retornava un error, el valor que s'assignava a `conflicts.value` no era un array sinó un objecte d'error de Spring. Això trencava tots els `computed` que esperaven un array.
 
